@@ -20,8 +20,10 @@
 
 # define BUFF_SIZE 32
 
-int		check_nl(char *buf);
-int		read_to_nl(int fd);
+int		check_nl(char *buf, int start_pt);
+int		read_to_nl(int fd, int start_pt);
+int		get_next_line(const int fd, char **line);
+
 
 
 #endif
