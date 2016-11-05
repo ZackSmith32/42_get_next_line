@@ -17,16 +17,25 @@ int		get_next_line(const int fd, char **line)
 	printf("in: get_next_line\n");
 	int		start_pt;
 	static t_list	**hash;
-
-	if (!(*line))
-	{
-		printf("line not null.  line: %s", *line);
-		return (-1);
-	}
+	
+	// if (line)
+	// {
+	// 	ft_puttab(line);
+	// 	printf("line NOT null.  line: \n");
+	// 	return (-1);
+	// }
 	//ft_bzero(*line, 1);
+
+
+
 	hash = (t_list **)malloc(sizeof(t_list*) * 100);
 	if (!hash[fd])
 		hash[fd] = ft_lstnew(0, sizeof(int));
+
+
+
+
+	
 	// printf("hash test %d\n", (int)hash[fd]->content);
 	// printf("in: get_next_line: after if\n");
 
