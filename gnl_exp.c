@@ -4,24 +4,21 @@
 #include <unistd.h>
 #include "libft.h"
 #define BUFFSIZE 32
-static t_list	info;
+static t_list	info[200];
 
 char	*leftovers(char *input, int index, t_list *holder);
 int		loop_through(int fd, t_list *holder, char **line);
 
 int		gnl(int fd, char **line)
 {
-	// printf("in gnl\n");
 	int				j;
 	t_list			*holder;
 
 	j = 0;
-	holder = &info;
-	// holder = (t_list *)malloc(sizeof(t_list));
-	// holder = ft_lstnew("/0", 0);
-	// printf("gnl: content = %s\n", (char *)(holder->content));
-	// printf("gnl: content_size = %d\n", (int)(holder->content_size));
+	holder = &(info[fd]);
 
+	printf("gnl: content = %s\n", (char *)(holder->content));
+	printf("gnl: content_size = %d\n", (int)(holder->content_size));
 	if(loop_through(fd, holder, line))
 	{
 		return (1);
@@ -38,113 +35,121 @@ int		loop_through(int fd, t_list *holder, char **line)
 	j = 0;
 	buf = (char *)malloc(sizeof(char) * (BUFFSIZE + 1));
 	*line = leftovers(holder->content, holder->content_size + 1, holder);
-	// printf("outside leftovers.  line = %s\n", *line);
-	// printf("ft_strlen(holder->content) = %d\n", (int)(ft_strlen(holder->content)));
-	// printf("holder->content_size = %d\n", (int)(holder->content_size));
-	if ((int)(holder->content_size) != BUFFSIZE 
-		&& 
-		(int)(ft_strlen(holder->content)) > (int)(holder->content_size))
+	printf("line = %s\n", *line);
+	printf("loop: content = %s\n", (char *)(holder->content));
+	printf("loop: content_size = %d\n", (int)(holder->content_size));
+
+	if ((int)(ft_strlen(holder->content)) > (int)(holder->content_size))
 	{
-		// printf("in loop_through if\n");
+		printf("return 1\n");
 		return (1);
 	}
-	// printf("after loop_trough if\n");
 	while ((j = read(fd, buf, BUFFSIZE)))
-	{
+	{	
+		if (j == -1)
+			return (-1);
 		buf[j] = '\0';
+		printf("buf: %s\n", buf);
 		str_holder = ft_strdup(*line);
 		free(*line);
 		*line = (char *)malloc(ft_strlen(str_holder) + BUFFSIZE + 1); //needs to be updated BUFFSIZE not right
-		// printf("here\n");	
 		ft_strcpy(*line, str_holder);
 		*line = ft_strcat(*line, leftovers(buf, 0, holder));
+		printf("loop: content = %s\n", (char *)(holder->content));
+		printf("loop: content_size = %d\n", (int)(holder->content_size));
 		if (holder->content_size != BUFFSIZE)
 			break;
-		// printf("______________\n");
 	}
-	// printf("out of loop\n");
-	// printf("line: %s\n", line);
-	// printf("content = %s\n", holder->content);
-	// printf("content_size = %d\n", (int)(holder->content_size));
-	if (j == 0)
+	printf("line =|%s|\n", *line);
+	printf("j = %d\n", j);
+	printf("ft_strlen(*line) = %d\n", (int)ft_strlen(*line));
+	if (j == 0 && 
+		ft_strlen(holder->content) == holder->content_size
+		&& ft_strlen(*line) == 0)
 	{
-		// printf("here1\n");
+		printf("in return 0\n");
 		return (0);
 	}
 	else
 	{
-		// printf("here2\n");
+		printf("in return 1\n");
 		return (1);
 	}
 }
 
 char	*leftovers(char *input, int index, t_list *holder)
 {	
-	// printf(">>>> in leftovers\ninput: %s\n", input);
+	printf("in leftovers\n");
 	int		i;
-	int		j;
 	char	*str;
+
 	i = 0;
-	j = 0;
 	if (!(input))
-	{
-		// printf("input = NULL\n");
 		return (0);
-	}
 	if (input[index] == '\n')
 	{
 		(holder->content_size)++;
 		return (ft_strdup("\0"));
 	}
-	// printf("after if\n");
-	while (	input[index + i] != '\0'
-			&&
-			input[index + i] != '\n')
+	while (input[index + i] != '\0' && input[index + i] != '\n')
 		i++;
-	// printf("i = %d\n", i);
 	str = (char *)malloc(i + 1);
 	i = 0;
-	while (	input[index + i] != '\0'
-			&&
-			input[index + i] != '\n'
-			&&
-			*input)
+	while (input[index + i] != '\0' && input[index + i] != '\n' && *input)
 	{
-		// printf("str[i] = %c, i = %d \n", input[index + i], i);
 		str[i] = input[index + i];
 		i++;
 	}
 	str[i] = '\0';
-
 	if (i == 0)
 		holder->content_size = 32;
 	else
 		holder->content_size = i + index;
-
 	free(holder->content);
 	holder->content = ft_strdup(input);
-	// printf("leftovers: content = %s\n", (char *)(holder->content));
-	// printf("leftovers: content_size = %d\n", (int)(holder->content_size));
-	// printf("leftovers: str = %s\n", str);
-	// printf(">>>> out leftovers\n");
+	printf("str = %s\n", str);
+	printf("out leftovers\n");
 	return (str);
 }
 
 int		main(int argc, char **argv)
 {
 	int		fd;
+	// int		fd2;
+	// int		fd3;
 	char	**line;
 	int		i;
+	int		j;
 
 	i = 0;
+	j = 0;
 
 	line = (char **)malloc(sizeof(char *) * 1);
 	fd = open(argv[1], O_RDONLY);
 	while (gnl(fd, line))
 	{
-		printf("%s", *line);
-		// printf("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+		printf("%s\n", *line);
+		printf("~~~~~~~~~~~~~~~\n");
+		// if (i == 3)
+		// {
+		// 	fd2 = open(argv[2], O_RDONLY);
+		// 	while (gnl(fd2, line))
+		// 	{
+		// 		printf("fd2: %s\n", *line);
+		// 		if (j == 2)
+		// 		{
+		// 			fd3 = open(argv[3], O_RDONLY);
+		// 			while (gnl(fd3, line))
+		// 			{
+		// 				printf("fd3: %s\n", *line);
+		// 			}
+		// 		}
+		// 		j++;
+		// 	}
+		// }
+		// i++;
 	}
+	printf("0 returned");
 	return (0);
 }
 
@@ -157,11 +162,6 @@ int		main(int argc, char **argv)
  *	<= size of read chunk
  *
  */ 
-
-
-
-
-
 
 
 
