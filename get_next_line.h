@@ -6,7 +6,7 @@
 /*   By: zsmith <zsmith@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/17 23:20:16 by zsmith            #+#    #+#             */
-/*   Updated: 2016/11/11 20:51:46 by zsmith           ###   ########.fr       */
+/*   Updated: 2016/11/11 21:23:34 by zsmith           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 
 static		t_list	g_info[200];
 
-int			get_next_line(int fd, char **line);
+int			get_next_line(const int fd, char **line);
 int			central(int fd, t_list *holder, char **line);
 int			check_struct(t_list *holder, char **line);
 int			read_buf(int fd, t_list *holder, char **line);

@@ -6,13 +6,13 @@
 /*   By: zsmith <zsmith@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 16:01:14 by zsmith            #+#    #+#             */
-/*   Updated: 2016/11/11 20:15:52 by zsmith           ###   ########.fr       */
+/*   Updated: 2016/11/11 21:23:45 by zsmith           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int		get_next_line(int fd, char **line)
+int		get_next_line(const int fd, char **line)
 {
 	t_list	*holder;
 
