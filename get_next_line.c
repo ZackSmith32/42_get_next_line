@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zsmith <zsmith@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2016/11/11 16:01:14 by zsmith            #+#    #+#             */
+/*   Updated: 2016/11/11 20:15:52 by zsmith           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
 
 int		get_next_line(int fd, char **line)
 {
-	t_list			*holder;
+	t_list	*holder;
 
 	if (!(fd >= 0))
 		return (-1);
@@ -10,8 +22,8 @@ int		get_next_line(int fd, char **line)
 		return (-1);
 	*line = (char *)malloc(1);
 	line[0][0] = '\0';
-	holder = &(info[fd]);
-	return(central(fd, holder, line));
+	holder = &(g_info[fd]);
+	return (central(fd, holder, line));
 }
 
 int		central(int fd, t_list *holder, char **line)
@@ -34,7 +46,7 @@ int		check_struct(t_list *holder, char **line)
 
 	i = 0;
 	index = (int)holder->content_size;
-	input = (char*)holder->content;	
+	input = (char*)holder->content;
 	if (!(input))
 		return (1);
 	if (index >= (int)ft_strlen(input))
@@ -63,7 +75,7 @@ int		read_buf(int fd, t_list *holder, char **line)
 		holder->content_size = 0;
 		set_line(holder, line);
 		if (holder->content_size != BUFFSIZE)
-			break;
+			break ;
 	}
 	if (i == 0)
 		return (0);
@@ -80,25 +92,21 @@ int		set_line(t_list *holder, char **line)
 	j = ft_strlen(*line);
 	temp = ft_strdup(*line);
 	free(*line);
-	while 	(	((char *)(holder->content))[holder->content_size + i] != '\0' 
+	while (((char *)(holder->content))[holder->content_size + i] != '\0'
 				&&
 				((char *)holder->content)[holder->content_size + i] != '\n')
-		i++;				
+		i++;
 	*line = (char *)malloc(ft_strlen(temp) + i + 1);
 	ft_strcpy(*line, temp);
 	free(temp);
 	i = 0;
-	while 	(	((char *)holder->content)[holder->content_size + i] != '\0' &&
+	while (((char *)holder->content)[holder->content_size + i] != '\0' &&
 				((char *)holder->content)[holder->content_size + i] != '\n')
 	{
 		line[0][j + i] = ((char *)holder->content)[holder->content_size + i];
 		i++;
 	}
-  	line[0][(j + i)] = '\0';
+	line[0][(j + i)] = '\0';
 	holder->content_size = holder->content_size + i;
 	return (1);
 }
-
-
-
-
