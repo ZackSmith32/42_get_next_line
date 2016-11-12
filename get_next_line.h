@@ -15,15 +15,15 @@
 
 # include <fcntl.h>
 # include <unistd.h>
-# include <stdio.h>
 # include "libft.h"
 
-# define BUFF_SIZE 32
+# define 	BUFFSIZE 32
+static 		t_list	info[200];
 
-int		check_nl(char *buf, int start_pt);
-int		read_to_nl(int fd, int start_pt);
-int		get_next_line(const int fd, char **line);
-
-
+int			get_next_line(int fd, char **line);
+int			central(int fd, t_list *holder, char **line);
+int			check_struct(t_list *holder, char **line);
+int			read_buf(int fd, t_list *holder, char **line);
+int			set_line(t_list *holder, char **line);
 
 #endif
