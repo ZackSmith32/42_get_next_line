@@ -6,7 +6,7 @@
 /*   By: zsmith <zsmith@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 16:01:14 by zsmith            #+#    #+#             */
-/*   Updated: 2016/11/11 21:23:45 by zsmith           ###   ########.fr       */
+/*   Updated: 2016/11/12 08:13:54 by zsmith           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 int		get_next_line(const int fd, char **line)
 {
 	t_list	*holder;
+	static	t_list	g_info[200];
 
 	if (!(fd >= 0))
 		return (-1);
