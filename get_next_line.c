@@ -6,7 +6,7 @@
 /*   By: zsmith <zsmith@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 16:01:14 by zsmith            #+#    #+#             */
-/*   Updated: 2016/11/18 17:26:44 by zsmith           ###   ########.fr       */
+/*   Updated: 2016/11/20 13:48:02 by zsmith           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,8 +66,8 @@ int		read_buf(int fd, t_list *holder, char **line)
 	char	*buf;
 
 	i = 0;
-	buf = (char *)malloc(sizeof(char) * (BUFFSIZE + 1));
-	while ((i = read(fd, buf, BUFFSIZE)))
+	buf = (char *)malloc(sizeof(char) * (BUFF_SIZE + 1));
+	while ((i = read(fd, buf, BUFF_SIZE)))
 	{
 		if (i == -1)
 			return (-1);
@@ -75,7 +75,7 @@ int		read_buf(int fd, t_list *holder, char **line)
 		holder->content = buf;
 		holder->content_size = 0;
 		set_line(holder, line);
-		if (holder->content_size != BUFFSIZE)
+		if (holder->content_size != BUFF_SIZE)
 			break ;
 	}
 	if (i == 0)
