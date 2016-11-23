@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
-#include <fcntl.h>
 
 int		get_next_line(const int fd, char **line)
 {
@@ -20,45 +18,28 @@ int		get_next_line(const int fd, char **line)
 	a_list					*temp;
 	a_list					*temp2;
 
-	// printf("gnl: fd = %d\n", fd);
 	if (fd < 0 || line == 0)
 		return (-1);
 	if (holder == NULL)
-	{
-		holder = (a_list *)malloc(sizeof(a_list));
-		holder->next = 0;
-		// printf("holder->next %p\n", holder->next);
-	}
+		holder = (a_list *)ft_memalloc(sizeof(a_list));
 	temp = holder;
-	// printf("temp->next %p\n", temp->next);
-	while (1)
-	{	
-		// printf("gnl: while\n");
-		// printf("temp->fd = %d\n", temp->fd);
-		if (temp->fd == fd)
-			break ;
-		// printf("temp->next = %p\n", temp->next);
+	while (temp->fd != fd)
+	{
 		if (temp->next == NULL)
 		{
-			// printf("gnl: temp->next = NULL\n");
-			temp2 = (a_list*)malloc(sizeof(a_list));
+			temp2 = (a_list *)ft_memalloc(sizeof(a_list));
 			temp2->fd = fd;
-			temp2->next = 0;
-			temp2->content = 0;
-			temp2->content_size = 0;
 			temp->next = temp2;
 			temp = temp->next;
 			break ;
 		}
 		temp = temp->next;
 	}
-	// printf("gnl: temp: fd: %d\n", temp->fd);
 	return (central(fd, temp, line));
 }
 
 int		central(int fd, a_list *holder, char **line)
 {
-	// printf("central: in: \n");
 	int		k;
 
 	*line = (char *)malloc(1);
@@ -73,8 +54,6 @@ int		central(int fd, a_list *holder, char **line)
 
 int		check_struct(a_list *holder, char **line)
 {
-	// printf("check_struct: in\n");
-
 	int		i;
 	int		index;
 	char	*input;
@@ -96,7 +75,6 @@ int		check_struct(a_list *holder, char **line)
 
 int		read_buf(int fd, a_list *holder, char **line)
 {
-	// printf("read_buf: in:\n");
 	int		i;
 	char	*buf;
 
@@ -104,8 +82,6 @@ int		read_buf(int fd, a_list *holder, char **line)
 	buf = (char *)malloc(sizeof(char) * (BUFF_SIZE + 1));
 	while ((i = read(fd, buf, BUFF_SIZE)))
 	{
-		// printf("read_buf: read ret: %d\n", i);
-		
 		if (i == -1)
 			return (-1);
 		buf[i] = '\0';
@@ -115,7 +91,6 @@ int		read_buf(int fd, a_list *holder, char **line)
 		if (holder->content_size != BUFF_SIZE)
 			break ;
 	}
-	// printf("read_buf: buf = %s\n", buf);
 	if (i == 0)
 		return (0);
 	return (1);
@@ -123,7 +98,6 @@ int		read_buf(int fd, a_list *holder, char **line)
 
 int		set_line(a_list *holder, char **line)
 {
-	// printf("set_line: in:\n");
 	int		i;
 	int		j;
 	char	*temp;
