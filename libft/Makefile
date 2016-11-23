@@ -80,7 +80,7 @@ CFILES	=	ft_memset.c 	\
 			ft_strdup_n.c	\
 			ft_strccat.c	\
 			
-HFILES	=	libft.h
+HFILES	=	includes/libft.h
 OFILES	=	$(CFILES:.c=.o)
 
 .PHONY: all $(NAME) main complib clean flcean re

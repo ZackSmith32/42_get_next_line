@@ -15,7 +15,7 @@
 **	delimiter c is provided to the function
 */
 
-#include "libft.h"
+#include "includes/libft.h"
 
 char	*ft_strdup_c(const char *src, char c)
 {

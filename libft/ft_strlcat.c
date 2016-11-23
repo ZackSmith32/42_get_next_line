@@ -18,7 +18,7 @@
 ** this is described in the man as "as long as there is one bite free in dest"
 */
 
-#include "libft.h"
+#include "includes/libft.h"
 
 size_t	ft_strlcat(char *dst, const char *src, size_t size)
 {
