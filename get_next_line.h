@@ -18,18 +18,18 @@
 
 # define BUFF_SIZE 32
 
-typedef struct		b_list
+typedef struct		s_a_list
 {
 	int				fd;
 	void			*content;
 	size_t			content_size;
-	struct b_list	*next;
-}					a_list;
+	struct s_a_list	*next;
+}					t_a_list;
 
-int			get_next_line(const int fd, char **line);
-int			central(int fd, a_list *holder, char **line);
-int			check_struct(a_list *holder, char **line);
-int			read_buf(int fd, a_list *holder, char **line);
-int			set_line(a_list *holder, char **line);
+int					get_next_line(const int fd, char **line);
+int					central(int fd, t_a_list *holder, char **line);
+int					check_struct(t_a_list *holder, char **line);
+int					read_buf(int fd, t_a_list *holder, char **line);
+int					set_line(t_a_list *holder, char **line);
 
 #endif

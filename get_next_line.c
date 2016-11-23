@@ -14,20 +14,20 @@
 
 int		get_next_line(const int fd, char **line)
 {
-	static a_list			*holder;
-	a_list					*temp;
-	a_list					*temp2;
+	static t_a_list				*holder;
+	t_a_list					*temp;
+	t_a_list					*temp2;
 
 	if (fd < 0 || line == 0)
 		return (-1);
 	if (holder == NULL)
-		holder = (a_list *)ft_memalloc(sizeof(a_list));
+		holder = (t_a_list *)ft_memalloc(sizeof(t_a_list));
 	temp = holder;
 	while (temp->fd != fd)
 	{
 		if (temp->next == NULL)
 		{
-			temp2 = (a_list *)ft_memalloc(sizeof(a_list));
+			temp2 = (t_a_list *)ft_memalloc(sizeof(t_a_list));
 			temp2->fd = fd;
 			temp->next = temp2;
 			temp = temp->next;
@@ -38,7 +38,7 @@ int		get_next_line(const int fd, char **line)
 	return (central(fd, temp, line));
 }
 
-int		central(int fd, a_list *holder, char **line)
+int		central(int fd, t_a_list *holder, char **line)
 {
 	int		k;
 
@@ -52,7 +52,7 @@ int		central(int fd, a_list *holder, char **line)
 	return (k);
 }
 
-int		check_struct(a_list *holder, char **line)
+int		check_struct(t_a_list *holder, char **line)
 {
 	int		i;
 	int		index;
@@ -73,7 +73,7 @@ int		check_struct(a_list *holder, char **line)
 	return (1);
 }
 
-int		read_buf(int fd, a_list *holder, char **line)
+int		read_buf(int fd, t_a_list *holder, char **line)
 {
 	int		i;
 	char	*buf;
@@ -96,7 +96,7 @@ int		read_buf(int fd, a_list *holder, char **line)
 	return (1);
 }
 
-int		set_line(a_list *holder, char **line)
+int		set_line(t_a_list *holder, char **line)
 {
 	int		i;
 	int		j;
