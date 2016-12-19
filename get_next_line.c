@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zsmith <zsmith@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mba <mba@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 16:01:14 by zsmith            #+#    #+#             */
-/*   Updated: 2016/11/20 13:48:02 by zsmith           ###   ########.fr       */
+/*   Updated: 2016/12/19 14:49:52 by mba              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int		get_next_line(const int fd, char **line)
 	static t_a_list				*holder;
 	t_a_list					*temp;
 	t_a_list					*temp2;
+	int							z;
 
 	if (fd < 0 || line == 0)
 		return (-1);
@@ -35,15 +36,15 @@ int		get_next_line(const int fd, char **line)
 		}
 		temp = temp->next;
 	}
-	return (central(fd, temp, line));
+	z = central(fd, temp, line);
+	return (z == 0 ? free_struct(&holder) : z);
 }
 
 int		central(int fd, t_a_list *holder, char **line)
 {
 	int		k;
 
-	*line = (char *)malloc(1);
-	line[0][0] = '\0';
+	*line = (char *)ft_memalloc(1);
 	if (!(check_struct(holder, line)))
 		return (1);
 	k = read_buf(fd, holder, line);
@@ -91,6 +92,7 @@ int		read_buf(int fd, t_a_list *holder, char **line)
 		if (holder->content_size != BUFF_SIZE)
 			break ;
 	}
+	free(buf);
 	if (i == 0)
 		return (0);
 	return (1);
