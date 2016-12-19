@@ -6,13 +6,13 @@
 /*   By: mba <mba@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 16:01:14 by zsmith            #+#    #+#             */
-/*   Updated: 2016/12/19 15:21:38 by mba              ###   ########.fr       */
+/*   Updated: 2016/12/19 15:32:26 by mba              ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-int		set_line(t_a_list *holder, char **line)
+static int		set_line(t_a_list *holder, char **line)
 {
 	int		i;
 	int		j;
@@ -41,7 +41,7 @@ int		set_line(t_a_list *holder, char **line)
 	return (1);
 }
 
-int		read_buf(int fd, t_a_list *holder, char **line)
+static int		read_buf(int fd, t_a_list *holder, char **line)
 {
 	int		i;
 	char	*buf;
@@ -65,7 +65,7 @@ int		read_buf(int fd, t_a_list *holder, char **line)
 	return (1);
 }
 
-int		check_struct(t_a_list *holder, char **line)
+static int		check_struct(t_a_list *holder, char **line)
 {
 	int		i;
 	int		index;
@@ -86,7 +86,7 @@ int		check_struct(t_a_list *holder, char **line)
 	return (1);
 }
 
-int		central(int fd, t_a_list *holder, char **line)
+static int		central(int fd, t_a_list *holder, char **line)
 {
 	int		k;
 
