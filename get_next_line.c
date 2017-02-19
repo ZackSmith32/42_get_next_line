@@ -6,74 +6,93 @@
 /*   By: zsmith <zsmith@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 16:01:14 by zsmith            #+#    #+#             */
-/*   Updated: 2016/11/20 13:48:02 by zsmith           ###   ########.fr       */
+/*   Updated: 2017/02/18 23:27:54 by zsmith           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
 int		get_next_line(const int fd, char **line)
 {
-	static t_a_list				*holder;
-	t_a_list					*temp;
-	t_a_list					*temp2;
+	static t_gnl				*holder;
+	t_gnl					*temp;
 
 	if (fd < 0 || line == 0)
 		return (-1);
 	if (holder == NULL)
-		holder = (t_a_list *)ft_memalloc(sizeof(t_a_list));
+		holder = (t_gnl *)ft_memalloc(sizeof(t_gnl));
 	temp = holder;
 	while (temp->fd != fd)
-	{
+	{	
 		if (temp->next == NULL)
 		{
-			temp2 = (t_a_list *)ft_memalloc(sizeof(t_a_list));
-			temp2->fd = fd;
-			temp->next = temp2;
+			temp->next = (t_gnl *)ft_memalloc(sizeof(t_gnl));
 			temp = temp->next;
+			temp->fd = fd;
 			break ;
 		}
 		temp = temp->next;
 	}
-	return (central(fd, temp, line));
+	return (central(temp, line));
 }
 
-int		central(int fd, t_a_list *holder, char **line)
+int		central(t_gnl *temp, char **line)
 {
 	int		k;
 
-	*line = (char *)malloc(1);
-	line[0][0] = '\0';
-	if (!(check_struct(holder, line)))
+	// check struct returns 1 if it finds a new line
+	if (check_struct(temp, line))
 		return (1);
-	k = read_buf(fd, holder, line);
+	k = read_buf(temp->fd, temp, line);
 	if (k == 0 && ft_strlen(*line) != 0)
 		k = 1;
 	return (k);
 }
 
-int		check_struct(t_a_list *holder, char **line)
+int		check_struct(t_gnl temp, char **line)
 {
-	int		i;
-	int		index;
-	char	*input;
+	while (temp->content && temp->content[i] != '\n' && temp->content != '\0')
+		i++;
+	*line = (char *)ft_memalloc(i + 1);
 
-	i = 0;
-	index = (int)holder->content_size;
-	input = (char*)holder->content;
-	if (!(input))
-		return (1);
-	if (index >= (int)ft_strlen(input))
-		return (1);
-	if (input != 0)
-		holder->content_size += 1;
-	set_line(holder, line);
-	if (holder->content_size != ft_strlen(holder->content))
-		return (0);
-	return (1);
 }
 
-int		read_buf(int fd, t_a_list *holder, char **line)
+
+
+
+
+
+
+
+
+
+
+
+
+
+// int		check_struct(t_gnl *holder, char **line)
+// {
+// 	int		i;
+// 	int		index;
+// 	char	*input;
+
+// 	i = 0;
+// 	index = (int)holder->content_size;
+// 	input = (char*)holder->content;
+// 	if (!(input))
+// 		return (1);
+// 	if (index >= (int)ft_strlen(input))
+// 		return (1);
+// 	if (input != 0)
+// 		holder->content_size += 1;
+// 	set_line(holder, line);
+// 	if (holder->content_size != ft_strlen(holder->content))
+// 		return (0);
+// 	return (1);
+// }
+
+int		read_buf(int fd, t_gnl *holder, char **line)
 {
 	int		i;
 	char	*buf;
@@ -96,7 +115,7 @@ int		read_buf(int fd, t_a_list *holder, char **line)
 	return (1);
 }
 
-int		set_line(t_a_list *holder, char **line)
+int		set_line(t_gnl *holder, char **line)
 {
 	int		i;
 	int		j;
