@@ -6,7 +6,7 @@
 /*   By: zsmith <zsmith@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/10/17 23:20:16 by zsmith            #+#    #+#             */
-/*   Updated: 2017/02/19 00:05:28 by zsmith           ###   ########.fr       */
+/*   Updated: 2017/02/19 15:25:23 by zsmith           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,9 +27,5 @@ typedef struct		s_gnl
 }					t_gnl;
 
 int					get_next_line(const int fd, char **line);
-int					central(t_gnl *holder, char **line);
-int					check_struct(t_gnl *temp, char **line);
-int					read_buf(int fd, t_gnl *item, char **line);
-int					set_line(t_gnl *holder, char **line);
 
 #endif
