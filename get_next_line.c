@@ -1,4 +1,3 @@
-/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
@@ -6,25 +5,149 @@
 /*   By: zsmith <zsmith@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 16:01:14 by zsmith            #+#    #+#             */
-/*   Updated: 2017/02/18 23:27:54 by zsmith           ###   ########.fr       */
+/*   Updated: 2017/02/28 09:42:28 by zsmith           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
-int		get_next_line(const int fd, char **line)
+static int		check_struct(t_gnl *temp, char **line)
 {
-	static t_gnl				*holder;
-	t_gnl					*temp;
+	int		i;
+	int		str_len;
+	char	*str;
+
+	if (ft_strlen(temp->content) == 0)
+		return (0);
+	i = 0;
+	while (temp->content[i] != '\n' && temp->content[i] != '\0')
+		i++;
+	free(*line);
+	*line = (char *)ft_memalloc(i + 1);
+	ft_memcpy(*line, temp->content, (size_t)i);
+	if (temp->content[i] == 0)
+	{
+		ft_bzero(temp->content, i);
+		free(temp->content);
+		return (0);
+	}
+	str_len = ft_strlen(temp->content) - i;
+	str = ft_memalloc(str_len);
+	ft_memcpy(str, temp->content + (i + 1), (size_t)str_len);
+	free(temp->content);
+	temp->content = str;
+	return (1);
+}
+
+static int		reading(int fd, char **line, char *buff)
+{
+	int		i;
+	int		j;
+	char	*temp;
+
+	i = 0;
+	j = 0;
+	while ((i = read(fd, buff, BUFF_SIZE)))
+	{
+		j = 0;
+		if (i == -1)
+			return (-1);
+		buff[i] = '\0';
+		while (buff[j] != '\n' && buff[j] != '\0')
+			j++;
+		temp = ft_strccat(*line, buff, '\n');
+		free(*line);
+		(*line) = temp;
+		if (j != BUFF_SIZE)
+			break ;
+	}
+	return (i);
+}
+
+static int		read_buf(int fd, t_gnl *item, char **line)
+{
+	char	*buff;
+	char	*hld;
+	int		i;
+	int		j;
+
+	j = 0;
+	buff = (char *)ft_memalloc(BUFF_SIZE + 1);
+	i = reading(fd, line, buff);
+	hld = ft_strchr(buff, '\n');
+	if (hld)
+	{
+		item->content = ft_strdup(hld + 1);
+	}
+	free(buff);
+	if (i == -1)
+		return (-1);
+	if (i != BUFF_SIZE)
+		return (0);
+	return (1);
+}
+
+void			free_gnl(t_gnl **head, int fd)
+{
+	t_gnl	*h;
+	t_gnl	*g;
+
+	h = *head;
+	if (h->fd == fd)
+	{
+		*head = h->next;
+		free(h->content);
+		free(h);
+	}
+	else
+		while (h->next != 0)
+		{
+			g = h->next;
+			if (g->fd == fd)
+			{
+				h->next = g->next;
+				free(g->content);
+				free(g);
+				break ;
+			}
+			h = h->next;
+		}
+}
+
+static int		central(t_gnl *temp, char **line, t_gnl **head)
+{
+	t_gnl	*h;
+	t_gnl	*g;
+	int		ret;
+
+	if (check_struct(temp, line))
+		return (1);
+	ret = read_buf(temp->fd, temp, line);
+	if (ret)
+		return (ret);
+	if (ft_strlen(*line) != 0)
+		return (1);
+	free_gnl(head, temp->fd);
+	return (0);
+}
+
+
+int				get_next_line(const int fd, char **line)
+{
+	static t_gnl	*head;
+	t_gnl			*temp;
 
 	if (fd < 0 || line == 0)
 		return (-1);
-	if (holder == NULL)
-		holder = (t_gnl *)ft_memalloc(sizeof(t_gnl));
-	temp = holder;
+	*line = (char *)ft_memalloc(1);
+	if (head == NULL)
+	{
+		head = (t_gnl *)ft_memalloc(sizeof(t_gnl));
+		head->fd = fd;
+	}
+	temp = head;
 	while (temp->fd != fd)
-	{	
+	{
 		if (temp->next == NULL)
 		{
 			temp->next = (t_gnl *)ft_memalloc(sizeof(t_gnl));
@@ -34,112 +157,8 @@ int		get_next_line(const int fd, char **line)
 		}
 		temp = temp->next;
 	}
-	return (central(temp, line));
-}
-
-int		central(t_gnl *temp, char **line)
-{
-	int		k;
-
-	// check struct returns 1 if it finds a new line
-	if (check_struct(temp, line))
-		return (1);
-	k = read_buf(temp->fd, temp, line);
-	if (k == 0 && ft_strlen(*line) != 0)
-		k = 1;
-	return (k);
-}
-
-int		check_struct(t_gnl temp, char **line)
-{
-	while (temp->content && temp->content[i] != '\n' && temp->content != '\0')
-		i++;
-	*line = (char *)ft_memalloc(i + 1);
-
+	return (central(temp, line, &head));
 }
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-// int		check_struct(t_gnl *holder, char **line)
-// {
-// 	int		i;
-// 	int		index;
-// 	char	*input;
-
-// 	i = 0;
-// 	index = (int)holder->content_size;
-// 	input = (char*)holder->content;
-// 	if (!(input))
-// 		return (1);
-// 	if (index >= (int)ft_strlen(input))
-// 		return (1);
-// 	if (input != 0)
-// 		holder->content_size += 1;
-// 	set_line(holder, line);
-// 	if (holder->content_size != ft_strlen(holder->content))
-// 		return (0);
-// 	return (1);
-// }
-
-int		read_buf(int fd, t_gnl *holder, char **line)
-{
-	int		i;
-	char	*buf;
-
-	i = 0;
-	buf = (char *)malloc(sizeof(char) * (BUFF_SIZE + 1));
-	while ((i = read(fd, buf, BUFF_SIZE)))
-	{
-		if (i == -1)
-			return (-1);
-		buf[i] = '\0';
-		holder->content = buf;
-		holder->content_size = 0;
-		set_line(holder, line);
-		if (holder->content_size != BUFF_SIZE)
-			break ;
-	}
-	if (i == 0)
-		return (0);
-	return (1);
-}
-
-int		set_line(t_gnl *holder, char **line)
-{
-	int		i;
-	int		j;
-	char	*temp;
-
-	i = 0;
-	j = ft_strlen(*line);
-	temp = ft_strdup(*line);
-	free(*line);
-	while (((char *)(holder->content))[holder->content_size + i] != '\0'
-				&&
-				((char *)holder->content)[holder->content_size + i] != '\n')
-		i++;
-	*line = (char *)malloc(ft_strlen(temp) + i + 1);
-	ft_strcpy(*line, temp);
-	free(temp);
-	i = 0;
-	while (((char *)holder->content)[holder->content_size + i] != '\0' &&
-				((char *)holder->content)[holder->content_size + i] != '\n')
-	{
-		line[0][j + i] = ((char *)holder->content)[holder->content_size + i];
-		i++;
-	}
-	line[0][(j + i)] = '\0';
-	holder->content_size = holder->content_size + i;
-	return (1);
-}
