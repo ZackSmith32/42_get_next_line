@@ -2,7 +2,7 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: zsmith <zsmith@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mba <mba@student.42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/11/11 16:01:14 by zsmith            #+#    #+#             */
 /*   Updated: 2017/02/28 09:42:28 by zsmith           ###   ########.fr       */
@@ -65,6 +65,7 @@ static int		reading(int fd, char **line, char *buff)
 }
 
 static int		read_buf(int fd, t_gnl *item, char **line)
+
 {
 	char	*buff;
 	char	*hld;
